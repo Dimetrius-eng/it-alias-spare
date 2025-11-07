@@ -211,20 +211,59 @@ async function initializeApp() {
   
   pauseBtn.style.display = 'none'; 
   
-  showScreen(mainMenuScreen); 
+  // ВИПРАВЛЕННЯ БАГУ v31:
+  // Ми ініціалізуємо currentActiveScreen тут,
+  // ПІСЛЯ того, як mainMenuScreen був знайдений
+  currentActiveScreen = mainMenuScreen; 
+  
+  showScreen(mainMenuScreen, true); // Запуск без анімації
   scoreboard.style.display = 'none';
 }
 
 // --- Функції гри ---
-function showScreen(screenToShow) {
-  screens.forEach(screen => screen.classList.remove('active'));
-  screenToShow.classList.add('active');
+let currentActiveScreen; // ВИПРАВЛЕННЯ БАГУ v31: Оголошуємо тут
+let isAnimating = false; 
+
+function showScreen(screenToShow, instant = false) {
+  if (isAnimating) return;
   
+  // ВИПРАВЛЕННЯ БАГУ v31: Переконатися, що currentActiveScreen не null
+  if (!currentActiveScreen) {
+      currentActiveScreen = mainMenuScreen;
+  }
+
+  if (instant) {
+    if (currentActiveScreen) {
+        currentActiveScreen.classList.remove('active');
+    }
+    screenToShow.classList.add('active');
+    currentActiveScreen = screenToShow;
+    return;
+  }
+
+  isAnimating = true;
+
+  if (currentActiveScreen) {
+      currentActiveScreen.classList.add('fade-out');
+  }
+
+  screenToShow.classList.add('active', 'scan-in');
+
   if (screenToShow === gameScreen) {
     pauseBtn.style.display = 'block';
   } else {
     pauseBtn.style.display = 'none';
   }
+
+  setTimeout(() => {
+    if (currentActiveScreen) {
+        currentActiveScreen.classList.remove('active', 'fade-out');
+    }
+    screenToShow.classList.remove('scan-in');
+    
+    currentActiveScreen = screenToShow;
+    isAnimating = false;
+  }, 400); 
 }
 
 function getWordsForCategory(category) {
@@ -243,7 +282,7 @@ function setupNewGame() {
   gameState.team1Score = 0;
   gameState.team2Score = 0;
   gameState.currentTeam = 1;
-  gameState.currentRound = 1; // ЗМІНА: Починаємо з раунду 1
+  gameState.currentRound = 1; // Починаємо з 1 раунду
   gameState.lastRoundScore = 0;
   gameState.isGameInProgress = true; 
   gameState.isRoundActive = false; 
@@ -277,14 +316,13 @@ function startRound(isContinuation = false) {
   timeLeft = gameState.roundTime;
   timerDisplay.textContent = timeLeft;
   
-  // ЗМІНА: Ми більше не збільшуємо раунд тут.
+  // (Логіка v39 для правильного підрахунку раундів)
   // if (!isContinuation) {
   //   if (gameState.currentTeam === 1) {
   //     gameState.currentRound++;
   //   }
   // }
   
-  // Ми просто показуємо поточний раунд
   roundCounterDisplay.textContent = `${gameState.currentRound} / ${gameState.totalRounds}`;
   
   if (gameState.currentTeam === 1) {
@@ -383,7 +421,6 @@ function handleLastWordSkip() {
   finishRoundLogic(); 
 }
 
-// ЗМІНА ТУТ: Повністю нова логіка завершення раунду
 function finishRoundLogic() {
   playSound(sounds.timesUp); 
 
@@ -392,31 +429,24 @@ function finishRoundLogic() {
   gameState.lastRoundScore = roundScore; 
   updateScoreboard();
 
-  // Перевіряємо, чи це був хід Команди 2
+  // Логіка v39 для правильного підрахунку раундів
   if (gameState.currentTeam === 2) {
-    // Це був хід Команди 2. Раунд *дійсно* завершено.
     if (gameState.currentRound >= gameState.totalRounds) {
-      // Це був ОСТАННІЙ раунд, гра завершена.
       gameState.isGameInProgress = false; 
       showWinner();
       clearGameState(); 
     } else {
-      // Це був не останній раунд. Збільшуємо лічильник
-      // і передаємо хід Команді 1
       gameState.currentRound++;
       gameState.currentTeam = 1;
       showRoundSummary(false); 
       saveGameState(); 
     }
   } else {
-    // Це був хід Команди 1. Раунд ще не завершено.
-    // Просто передаємо хід Команді 2.
     gameState.currentTeam = 2;
     showRoundSummary(false); 
     saveGameState(); 
   }
 }
-
 
 function showRoundSummary(isContinuation = false) {
   if (isContinuation) {
