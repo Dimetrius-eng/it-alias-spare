@@ -1,5 +1,5 @@
 // ВЕРСІЯ 41 - Виправлення багу анімації v31
-const CACHE_NAME = 'it-alias-v41-animation-bug-fix';
+const CACHE_NAME = 'it-alias-v42-animation-bug-fix';
 
 const urlsToCache = [
   './',
@@ -66,3 +66,4 @@ self.addEventListener('activate', event => {
     })
   );
 });
+
