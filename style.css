@@ -31,6 +31,7 @@ p { color: #555; line-height: 1.6; }
 
 /* --- ЗМІНА ТУТ: Логіка анімації екранів --- */
 .screen {
+    /* Екрани тепер "один на одному" */
     position: absolute;
     top: 0;
     left: 0;
@@ -39,37 +40,27 @@ p { color: #555; line-height: 1.6; }
     padding: 28px; 
     box-sizing: border-box; 
     
+    /* Стан "Сховано" */
     opacity: 0;
     visibility: hidden;
-    transform: translateY(10px); 
+    transform: translateY(10px); /* Злегка "піднято" для ефекту */
+    /* Плавний перехід */
     transition: opacity 0.3s ease-out, visibility 0.3s ease-out, transform 0.3s ease-out;
 }
 
 .screen.active {
+    /* Стан "Видимий" */
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
-    z-index: 2; 
+    z-index: 2; /* Переконатися, що він зверху */
 }
 
+/* Анімація "згасання" для старого екрану */
 .screen.fade-out {
     opacity: 0;
-    transform: translateY(-10px); 
-    z-index: 1; 
-}
-
-.screen.scan-in {
-    clip-path: inset(50% 0 50% 0);
-    animation: scan-effect 0.4s ease-out forwards;
-}
-
-@keyframes scan-effect {
-    from {
-        clip-path: inset(50% 0 50% 0);
-    }
-    to {
-        clip-path: inset(0 0 0 0); 
-    }
+    transform: translateY(-10px); /* Злегка "опускається" */
+    z-index: 1; /* Ховаємо під новий екран */
 }
 /* --- Кінець логіки анімації --- */
 
@@ -83,7 +74,7 @@ p { color: #555; line-height: 1.6; }
     padding: 15px 20px;
     margin-bottom: 20px;
     margin-top: 50px; 
-    position: relative; 
+    position: relative; /* Щоб бути над анімацією */
     z-index: 5;
 }
 .team-score {
@@ -106,7 +97,7 @@ p { color: #555; line-height: 1.6; }
     margin: 25px 0;
 }
 .settings h2 { 
-    margin-top: 0; 
+    margin-top: 50px; /* Відступ для кнопок */
 }
 .settings input[type="text"] {
     width: 100%;
@@ -169,7 +160,6 @@ p { color: #555; line-height: 1.6; }
     overflow-wrap: break-word;
     position: relative; 
     z-index: 5;
-    /* --- Дефіси (hyphens) видалено --- */
 }
 
 /* --- Екран "Останнє слово" --- */
