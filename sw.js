@@ -1,5 +1,6 @@
 // ВЕРСІЯ 39 - Виправлення багу лічильника раундів
-const CACHE_NAME = 'it-alias-v40-animate-css';
+const CACHE_NAME = 'it-alias-v39-round-counter-fix';
+
 const urlsToCache = [
   './',
   './index.html',
@@ -13,8 +14,7 @@ const urlsToCache = [
   './sounds/correct.mp3',
   './sounds/skip.mp3',
   './sounds/times-up.mp3',
-  './sounds/tick.mp3',
-  'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css'
+  './sounds/tick.mp3'
 ];
 
 // 1. Подія "install"
@@ -61,7 +61,7 @@ self.addEventListener('activate', event => {
       );
     })
     .then(() => {
-        console.log('Service Worker v40 активовано і перехоплює контроль!');
+        console.log('Service Worker v39 активовано і перехоплює контроль!');
         return self.clients.claim();
     })
   );
