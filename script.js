@@ -216,52 +216,16 @@ async function initializeApp() {
 }
 
 // --- Функції гри ---
-// --- Знаходимо елементи... ---
-// ... (весь ваш код пошуку елементів) ...
-
-let currentActiveScreen = mainMenuScreen; // Наш поточний екран
-let isAnimating = false; // "Замок" від подвійних кліків
-
 function showScreen(screenToShow) {
-  // Якщо анімація вже йде, ігноруємо клік
-  if (isAnimating) return;
-
-  // 1. Починаємо анімацію, ставимо "замок"
-  isAnimating = true;
+  screens.forEach(screen => screen.classList.remove('active'));
+  screenToShow.classList.add('active');
   
-  // Керуємо кнопкою паузи (як і раніше)
   if (screenToShow === gameScreen) {
     pauseBtn.style.display = 'block';
   } else {
     pauseBtn.style.display = 'none';
   }
-
-  // 2. Анімація "ЗГАСАННЯ" (для старого екрану)
-  currentActiveScreen.classList.add('animate__animated', 'animate__fadeOut');
-
-  // 3. Чекаємо, поки "згасання" закінчиться (300 мілісекунд)
-  setTimeout(() => {
-    // 4. Ховаємо старий екран
-    currentActiveScreen.classList.remove('active');
-    currentActiveScreen.classList.remove('animate__animated', 'animate__fadeOut');
-    
-    // 5. Показуємо новий екран
-    screenToShow.classList.add('active');
-    
-    // 6. Анімація "ПОЯВИ" (для нового екрану)
-    // 'animate__fadeIn' - це і є ваша плавна анімація
-    screenToShow.classList.add('animate__animated', 'animate__fadeIn');
-
-    // 7. Оновлюємо поточний екран
-    currentActiveScreen = screenToShow;
-    
-    // 8. Знімаємо "замок"
-    isAnimating = false;
-  }, 300); // 300ms - час анімації
 }
-
-// ... (решта вашого `script.js` (initializeApp, setupNewGame...)
-// НЕ ПОТРІБУЄ ЖОДНИХ ЗМІН) ...
 
 function getWordsForCategory(category) {
   if (category === 'mixed') {
