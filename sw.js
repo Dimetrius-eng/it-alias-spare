@@ -1,5 +1,5 @@
-// ВЕРСІЯ 41 - Animate.css (Надійна версія)
-const CACHE_NAME = 'it-alias-v41-animate-css';
+// ВЕРСІЯ 42 - Примусове оновлення (для "отруєного" кешу v41)
+const CACHE_NAME = 'it-alias-v43-final-animation-fix';
 
 const urlsToCache = [
   './',
@@ -10,13 +10,11 @@ const urlsToCache = [
   './words.json',
   './icons/icon-192x192.png',
   './icons/icon-512x512.png',
+  'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap',
   './sounds/correct.mp3',
   './sounds/skip.mp3',
   './sounds/times-up.mp3',
-  './sounds/tick.mp3',
-  
-  // НОВИЙ ФАЙЛ, ЯКИЙ ТРЕБА КЕШУВАТИ:
-  'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css'
+  './sounds/tick.mp3'
 ];
 
 // 1. Подія "install"
@@ -24,7 +22,7 @@ self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('Відкрито кеш v41');
+        console.log('Відкрито кеш v42');
         const localUrls = urlsToCache.filter(url => !url.startsWith('http'));
         const externalUrls = urlsToCache.filter(url => url.startsWith('http'));
         
@@ -34,7 +32,7 @@ self.addEventListener('install', event => {
             return Promise.all(externalRequests.map(req => cache.add(req)));
           });
       })
-      .catch(err => console.error('Помилка cache.addAll у v41:', err))
+      .catch(err => console.error('Помилка cache.addAll у v43:', err))
   );
 });
 
@@ -50,12 +48,14 @@ self.addEventListener('fetch', event => {
 
 // 3. Подія "activate"
 self.addEventListener('activate', event => {
-  const cacheWhitelist = [CACHE_NAME]; 
+  const cacheWhitelist = [CACHE_NAME]; // Залишити ТІЛЬКИ v42
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cacheName => {
+          // Якщо назва кешу НЕ v42...
           if (cacheWhitelist.indexOf(cacheName) === -1) {
+            // ...ВИДАЛИТИ ЙОГО (включно зі зламаним v41)
             console.log('Видалення старого кешу:', cacheName);
             return caches.delete(cacheName);
           }
@@ -63,7 +63,7 @@ self.addEventListener('activate', event => {
       );
     })
     .then(() => {
-        console.log('Service Worker v41 активовано і перехоплює контроль!');
+        console.log('Service Worker v43 активовано і перехоплює контроль!');
         return self.clients.claim();
     })
   );
