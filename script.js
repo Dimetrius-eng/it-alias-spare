@@ -211,8 +211,7 @@ async function initializeApp() {
   
   pauseBtn.style.display = 'none'; 
   
-  // ВИПРАВЛЕННЯ БАГУ v31:
-  // Ми ініціалізуємо currentActiveScreen тут,
+  // ВИПРАВЛЕННЯ БАГУ: Ініціалізуємо currentActiveScreen тут,
   // ПІСЛЯ того, як mainMenuScreen був знайдений
   currentActiveScreen = mainMenuScreen; 
   
@@ -221,13 +220,14 @@ async function initializeApp() {
 }
 
 // --- Функції гри ---
-let currentActiveScreen; // ВИПРАВЛЕННЯ БАГУ v31: Оголошуємо тут
+// ВИПРАВЛЕННЯ БАГУ: Оголошуємо тут
+let currentActiveScreen; 
 let isAnimating = false; 
 
 function showScreen(screenToShow, instant = false) {
   if (isAnimating) return;
   
-  // ВИПРАВЛЕННЯ БАГУ v31: Переконатися, що currentActiveScreen не null
+  // ВИПРАВЛЕННЯ БАГУ: Переконатися, що currentActiveScreen не null
   if (!currentActiveScreen) {
       currentActiveScreen = mainMenuScreen;
   }
@@ -315,13 +315,6 @@ function startRound(isContinuation = false) {
   roundScore = 0; 
   timeLeft = gameState.roundTime;
   timerDisplay.textContent = timeLeft;
-  
-  // (Логіка v39 для правильного підрахунку раундів)
-  // if (!isContinuation) {
-  //   if (gameState.currentTeam === 1) {
-  //     gameState.currentRound++;
-  //   }
-  // }
   
   roundCounterDisplay.textContent = `${gameState.currentRound} / ${gameState.totalRounds}`;
   
@@ -429,7 +422,6 @@ function finishRoundLogic() {
   gameState.lastRoundScore = roundScore; 
   updateScoreboard();
 
-  // Логіка v39 для правильного підрахунку раундів
   if (gameState.currentTeam === 2) {
     if (gameState.currentRound >= gameState.totalRounds) {
       gameState.isGameInProgress = false; 
