@@ -211,16 +211,16 @@ async function initializeApp() {
   
   pauseBtn.style.display = 'none'; 
   
-  // ВИПРАВЛЕННЯ БАГУ: Ініціалізуємо currentActiveScreen тут,
-  // ПІСЛЯ того, як mainMenuScreen був знайдений
-  currentActiveScreen = mainMenuScreen; 
+  // ВИПРАВЛЕННЯ БАГУ: Ініціалізуємо currentActiveScreen тут
+  currentActiveScreen = mainMenuScreen;
   
-  showScreen(mainMenuScreen, true); // Запуск без анімації
+  showScreen(mainMenuScreen, true); // true = без анімації
   scoreboard.style.display = 'none';
 }
 
 // --- Функції гри ---
-// ВИПРАВЛЕННЯ БАГУ: Оголошуємо тут
+
+// ЗМІНА ТУТ: Додаємо логіку анімації
 let currentActiveScreen; 
 let isAnimating = false; 
 
@@ -232,39 +232,49 @@ function showScreen(screenToShow, instant = false) {
       currentActiveScreen = mainMenuScreen;
   }
 
+  // Миттєвий перехід (для initializeApp)
   if (instant) {
-    if (currentActiveScreen) {
-        currentActiveScreen.classList.remove('active');
-    }
+    currentActiveScreen.classList.remove('active');
     screenToShow.classList.add('active');
     currentActiveScreen = screenToShow;
     return;
   }
 
+  // --- Початок анімації ---
   isAnimating = true;
 
-  if (currentActiveScreen) {
-      currentActiveScreen.classList.add('fade-out');
-  }
+  // 1. Анімація "ЗГАСАННЯ" (для старого екрану)
+  currentActiveScreen.classList.add('animate__animated', 'animate__fadeOut');
 
-  screenToShow.classList.add('active', 'scan-in');
-
-  if (screenToShow === gameScreen) {
-    pauseBtn.style.display = 'block';
-  } else {
-    pauseBtn.style.display = 'none';
-  }
-
+  // 2. Чекаємо, поки "згасання" закінчиться (400ms з CSS)
   setTimeout(() => {
-    if (currentActiveScreen) {
-        currentActiveScreen.classList.remove('active', 'fade-out');
-    }
-    screenToShow.classList.remove('scan-in');
+    // 3. Ховаємо старий екран
+    currentActiveScreen.classList.remove('active');
+    currentActiveScreen.classList.remove('animate__animated', 'animate__fadeOut');
     
+    // 4. Показуємо новий екран (щоб анімація 'fadeIn' спрацювала)
+    screenToShow.classList.add('active');
+    
+    // 5. Анімація "ПОЯВИ" (для нового екрану)
+    screenToShow.classList.add('animate__animated', 'animate__fadeIn');
+
+    // 6. Оновлюємо поточний екран
     currentActiveScreen = screenToShow;
+    
+    // 7. Керуємо кнопкою паузи
+    if (screenToShow === gameScreen) {
+      pauseBtn.style.display = 'block';
+    } else {
+      pauseBtn.style.display = 'none';
+    }
+
+    // 8. Знімаємо "замок"
+    // (Animate.css автоматично видаляє класи, тому isAnimating = false - це все, що треба)
     isAnimating = false;
-  }, 400); 
+    
+  }, 400); // 400ms = 0.4s (взято з --animate-duration в CSS)
 }
+
 
 function getWordsForCategory(category) {
   if (category === 'mixed') {
