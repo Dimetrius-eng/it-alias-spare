@@ -29,8 +29,20 @@ h1 { color: #0056b3; margin-top: 0; margin-bottom: 10px; }
 h2 { color: #333; margin-bottom: 10px; }
 p { color: #555; line-height: 1.6; }
 
-.screen { display: none; }
-.screen.active { display: block; }
+.screen {
+    display: none; /* Ховаємо екран повністю */
+    position: absolute; /* Всі екрани "один на одному" */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 28px; 
+    box-sizing: border-box; 
+}
+
+.screen.active {
+    display: block; /* Робимо його видимим, щоб анімація спрацювала */
+}
 
 /* --- Табло --- */
 .scoreboard {
@@ -122,6 +134,33 @@ p { color: #555; line-height: 1.6; }
     word-wrap: break-word; 
     overflow-wrap: break-word;
 }
+
+/* --- НОВИЙ ЕКРАН: Останнє слово --- */
+#last-word-screen h2 {
+    margin-top: 50px;
+    color: #d9534f; 
+}
+#last-word-display {
+    font-size: 2rem; 
+    font-weight: 600;
+    color: #000;
+    background-color: #f0f8ff; 
+    border: 2px dashed #007bff;
+    border-radius: 12px;
+    padding: 40px 20px;
+    margin-bottom: 15px;
+    min-height: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    word-wrap: break-word; 
+    overflow-wrap: break-word;
+}
+#last-word-screen p {
+    font-weight: 600;
+    color: #555;
+}
+
 
 /* --- Екран передачі ходу --- */
 #turn-end-screen h2 { 
