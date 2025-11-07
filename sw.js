@@ -1,5 +1,5 @@
-// ВЕРСІЯ 41 - Виправлення багу анімації v31
-const CACHE_NAME = 'it-alias-v42-animation-bug-fix';
+// ВЕРСІЯ 41 - Animate.css (Надійна версія)
+const CACHE_NAME = 'it-alias-v41-animate-css';
 
 const urlsToCache = [
   './',
@@ -10,11 +10,13 @@ const urlsToCache = [
   './words.json',
   './icons/icon-192x192.png',
   './icons/icon-512x512.png',
-  'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap',
   './sounds/correct.mp3',
   './sounds/skip.mp3',
   './sounds/times-up.mp3',
-  './sounds/tick.mp3'
+  './sounds/tick.mp3',
+  
+  // НОВИЙ ФАЙЛ, ЯКИЙ ТРЕБА КЕШУВАТИ:
+  'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css'
 ];
 
 // 1. Подія "install"
@@ -66,4 +68,3 @@ self.addEventListener('activate', event => {
     })
   );
 });
-
