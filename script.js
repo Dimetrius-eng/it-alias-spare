@@ -28,6 +28,7 @@ const mainMenuScreen = document.getElementById('main-menu-screen');
 const settingsScreen = document.getElementById('settings-screen'); 
 const rulesScreen = document.getElementById('rules-screen');     
 const gameScreen = document.getElementById('game-screen');
+const lastWordScreen = document.getElementById('last-word-screen'); 
 const turnEndScreen = document.getElementById('turn-end-screen');
 const gameOverScreen = document.getElementById('game-over-screen');
 const pauseScreen = document.getElementById('pause-screen'); 
@@ -65,6 +66,9 @@ const roundSummaryDisplay = document.getElementById('round-summary');
 const nextTeamNameDisplay = document.getElementById('next-team-name');
 const winnerMessageDisplay = document.getElementById('winner-message'); 
 const finalScoreSummaryDisplay = document.getElementById('final-score-summary');
+const lastWordDisplay = document.getElementById('last-word-display'); 
+const lastWordCorrectBtn = document.getElementById('last-word-correct-btn'); 
+const lastWordSkipBtn = document.getElementById('last-word-skip-btn'); 
 
 // --- Прив'язуємо функції до кнопок ---
 newGameMenuBtn.addEventListener('click', () => {
@@ -80,7 +84,12 @@ newGameMenuBtn.addEventListener('click', () => {
   }
 });
 rulesBtn.addEventListener('click', () => showScreen(rulesScreen));
-startBtn.addEventListener('click', setupNewGame);
+startBtn.addEventListener('click', () => {
+    if (isSoundEnabled) {
+        Object.values(sounds).forEach(sound => sound.load());
+    }
+    setupNewGame();
+});
 continueBtn.addEventListener('click', continueGame); 
 correctBtn.addEventListener('click', handleCorrect);
 skipBtn.addEventListener('click', handleSkip);
@@ -105,6 +114,9 @@ quitToMenuBtn.addEventListener('click', quitGame);
 soundToggleBtn.addEventListener('click', toggleSound); 
 timeSlider.oninput = function() { timeOutput.value = this.value; }
 roundsSlider.oninput = function() { roundsOutput.value = this.value; }
+lastWordCorrectBtn.addEventListener('click', handleLastWordCorrect);
+lastWordSkipBtn.addEventListener('click', handleLastWordSkip);
+
 
 // --- Робота зі сховищем (localStorage) ---
 const GAME_STORAGE_KEY = 'itAliasSavedGame'; 
@@ -204,17 +216,52 @@ async function initializeApp() {
 }
 
 // --- Функції гри ---
+// --- Знаходимо елементи... ---
+// ... (весь ваш код пошуку елементів) ...
+
+let currentActiveScreen = mainMenuScreen; // Наш поточний екран
+let isAnimating = false; // "Замок" від подвійних кліків
+
 function showScreen(screenToShow) {
-  screens.forEach(screen => screen.classList.remove('active'));
-  screenToShow.classList.add('active');
+  // Якщо анімація вже йде, ігноруємо клік
+  if (isAnimating) return;
+
+  // 1. Починаємо анімацію, ставимо "замок"
+  isAnimating = true;
   
-  // Керуємо ТІЛЬКИ кнопкою паузи
+  // Керуємо кнопкою паузи (як і раніше)
   if (screenToShow === gameScreen) {
     pauseBtn.style.display = 'block';
   } else {
     pauseBtn.style.display = 'none';
   }
+
+  // 2. Анімація "ЗГАСАННЯ" (для старого екрану)
+  currentActiveScreen.classList.add('animate__animated', 'animate__fadeOut');
+
+  // 3. Чекаємо, поки "згасання" закінчиться (300 мілісекунд)
+  setTimeout(() => {
+    // 4. Ховаємо старий екран
+    currentActiveScreen.classList.remove('active');
+    currentActiveScreen.classList.remove('animate__animated', 'animate__fadeOut');
+    
+    // 5. Показуємо новий екран
+    screenToShow.classList.add('active');
+    
+    // 6. Анімація "ПОЯВИ" (для нового екрану)
+    // 'animate__fadeIn' - це і є ваша плавна анімація
+    screenToShow.classList.add('animate__animated', 'animate__fadeIn');
+
+    // 7. Оновлюємо поточний екран
+    currentActiveScreen = screenToShow;
+    
+    // 8. Знімаємо "замок"
+    isAnimating = false;
+  }, 300); // 300ms - час анімації
 }
+
+// ... (решта вашого `script.js` (initializeApp, setupNewGame...)
+// НЕ ПОТРІБУЄ ЖОДНИХ ЗМІН) ...
 
 function getWordsForCategory(category) {
   if (category === 'mixed') {
@@ -232,7 +279,7 @@ function setupNewGame() {
   gameState.team1Score = 0;
   gameState.team2Score = 0;
   gameState.currentTeam = 1;
-  gameState.currentRound = 0;
+  gameState.currentRound = 1; // ЗМІНА: Починаємо з раунду 1
   gameState.lastRoundScore = 0;
   gameState.isGameInProgress = true; 
   gameState.isRoundActive = false; 
@@ -250,6 +297,11 @@ function continueGame() {
   roundsSlider.value = gameState.totalRounds;
   roundsOutput.value = gameState.totalRounds;
   categorySelect.value = gameState.selectedCategory; 
+  
+  if (isSoundEnabled) {
+      Object.values(sounds).forEach(sound => sound.load());
+  }
+
   if (gameState.isRoundActive) {
     startRound(true); 
   } else {
@@ -260,12 +312,17 @@ function startRound(isContinuation = false) {
   roundScore = 0; 
   timeLeft = gameState.roundTime;
   timerDisplay.textContent = timeLeft;
-  if (!isContinuation) {
-    if (gameState.currentTeam === 1) {
-      gameState.currentRound++;
-    }
-  }
+  
+  // ЗМІНА: Ми більше не збільшуємо раунд тут.
+  // if (!isContinuation) {
+  //   if (gameState.currentTeam === 1) {
+  //     gameState.currentRound++;
+  //   }
+  // }
+  
+  // Ми просто показуємо поточний раунд
   roundCounterDisplay.textContent = `${gameState.currentRound} / ${gameState.totalRounds}`;
+  
   if (gameState.currentTeam === 1) {
     document.getElementById('team1-display').classList.add('active-team');
     document.getElementById('team2-display').classList.remove('active-team');
@@ -339,26 +396,64 @@ function handleSkip() {
   playSound(sounds.skip); 
   nextWord();
 }
+
 function endRound() {
   clearInterval(timerInterval); 
   gameState.isRoundActive = false; 
   stopSound(sounds.tick); 
-  playSound(sounds.timesUp); 
   
+  lastWordDisplay.innerHTML = wordDisplay.innerHTML;
+  lastWordDisplay.style.fontSize = wordDisplay.style.fontSize;
+  
+  showScreen(lastWordScreen);
+}
+
+function handleLastWordCorrect() {
+  roundScore++; 
+  playSound(sounds.correct); 
+  finishRoundLogic(); 
+}
+
+function handleLastWordSkip() {
+  playSound(sounds.skip); 
+  finishRoundLogic(); 
+}
+
+// ЗМІНА ТУТ: Повністю нова логіка завершення раунду
+function finishRoundLogic() {
+  playSound(sounds.timesUp); 
+
   if (gameState.currentTeam === 1) gameState.team1Score += roundScore;
   else gameState.team2Score += roundScore;
   gameState.lastRoundScore = roundScore; 
   updateScoreboard();
-  if (gameState.currentTeam === 2 && gameState.currentRound >= gameState.totalRounds) {
-    gameState.isGameInProgress = false; 
-    showWinner();
-    clearGameState(); 
+
+  // Перевіряємо, чи це був хід Команди 2
+  if (gameState.currentTeam === 2) {
+    // Це був хід Команди 2. Раунд *дійсно* завершено.
+    if (gameState.currentRound >= gameState.totalRounds) {
+      // Це був ОСТАННІЙ раунд, гра завершена.
+      gameState.isGameInProgress = false; 
+      showWinner();
+      clearGameState(); 
+    } else {
+      // Це був не останній раунд. Збільшуємо лічильник
+      // і передаємо хід Команді 1
+      gameState.currentRound++;
+      gameState.currentTeam = 1;
+      showRoundSummary(false); 
+      saveGameState(); 
+    }
   } else {
-    gameState.currentTeam = (gameState.currentTeam === 1) ? 2 : 1;
+    // Це був хід Команди 1. Раунд ще не завершено.
+    // Просто передаємо хід Команді 2.
+    gameState.currentTeam = 2;
     showRoundSummary(false); 
     saveGameState(); 
   }
 }
+
+
 function showRoundSummary(isContinuation = false) {
   if (isContinuation) {
     turnEndTitle.style.display = 'none';
@@ -415,17 +510,28 @@ function resumeGame() {
   showScreen(gameScreen); 
   startTimer(); 
 }
+
 function quitGame() {
   if (!confirm("Вийти в головне меню? Ваш прогрес буде збережено.")) {
       return; 
   }
+  
   clearInterval(timerInterval); 
   stopSound(sounds.tick); 
   
-  gameState.isGameInProgress = false; 
+  gameState.isRoundActive = false; 
   saveGameState(); 
+  
   scoreboard.style.display = 'none'; 
-  initializeApp(); 
+  
+  showScreen(mainMenuScreen);
+  
+  if (loadGameState() && gameState.isGameInProgress) {
+    continueBtn.style.display = 'block';
+    continueBtn.disabled = false;
+  } else {
+    continueBtn.style.display = 'none';
+  }
 }
 
 // --- ЗАПУСК ДОДАТКУ ---
