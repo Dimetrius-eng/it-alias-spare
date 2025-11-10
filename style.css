@@ -13,12 +13,13 @@ body {
 }
 
 .game-container {
-    background-color: #ffffff;
+    background-color: #ffffff; /* (Фоновий колір для всіх екранів, ОКРІМ МЕНЮ) */
     border-radius: 20px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
     width: 100%;
     max-width: 450px;
-    padding: 28px;
+    /* ВИДАЛЯЄМО padding звідси, щоб фон екранів був на 100% */
+    /* padding: 28px; */ 
     text-align: center;
     overflow: hidden;
     position: relative; 
@@ -29,8 +30,15 @@ h1 { color: #0056b3; margin-top: 0; margin-bottom: 10px; }
 h2 { color: #333; margin-bottom: 10px; }
 p { color: #555; line-height: 1.6; }
 
-.screen { display: none; }
-.screen.active { display: block; }
+.screen { 
+    display: none; 
+    /* Додаємо padding сюди, щоб він був на кожному екрані */
+    padding: 28px;
+    box-sizing: border-box; /* Важливо */
+}
+.screen.active { 
+    display: block; 
+}
 
 /* --- Табло --- */
 .scoreboard {
@@ -62,7 +70,7 @@ p { color: #555; line-height: 1.6; }
     margin: 25px 0;
 }
 .settings h2 { 
-    margin-top: 0; 
+    margin-top: 50px; /* Відступ для кнопки паузи/звуку */
 }
 .settings input[type="text"] {
     width: 100%;
@@ -123,7 +131,7 @@ p { color: #555; line-height: 1.6; }
     overflow-wrap: break-word;
 }
 
-/* --- НОВИЙ ЕКРАН: Останнє слово --- */
+/* --- Екран "Останнє слово" --- */
 #last-word-screen h2 {
     margin-top: 50px;
     color: #d9534f; 
@@ -204,23 +212,80 @@ button:disabled {
   cursor: not-allowed;
 }
 
-/* --- Головне меню --- */
-#main-menu-screen h1 {
-  margin-bottom: 30px;
-  margin-top: 0; 
+/* --- ЗМІНА ТУТ: Головне меню --- */
+#main-menu-screen {
+    padding: 0; /* Прибираємо padding, щоб фон був на 100% */
 }
+
+/* Новий блок для верхньої частини (IT-фон) */
+.menu-top-half {
+    height: 45vh; /* 45% висоти екрану */
+    max-height: 300px;
+    /* Гарний IT-градієнт */
+    background: linear-gradient(135deg, #0056b3, #007bff, #00aaff);
+    /* (Сюди можна додати background-image з IT-патерном) */
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom-left-radius: 20px; /* Округляємо кути */
+    border-bottom-right-radius: 20px;
+}
+
+/* Новий блок для Логотипу */
+.logo-placeholder {
+    width: 120px;
+    height: 120px;
+    background-color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #007bff;
+    border: 6px solid #0056b3;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+/* Новий блок для нижньої частини (білої, з кнопками) */
+.menu-bottom-half {
+    height: 55vh; /* 55% висоти екрану */
+    background-color: #ffffff; /* Наш білий фон */
+    position: relative;
+    padding: 28px; /* Повертаємо padding */
+    box-sizing: border-box;
+}
+
+/* МАСКА-ДУГА (Найскладніша частина) */
+.menu-bottom-half::before {
+    content: '';
+    position: absolute;
+    top: -50px; /* "Піднімаємо" дугу вгору */
+    left: -25%; /* Розтягуємо, щоб дуга була плавною */
+    width: 150%;
+    height: 100px;
+    background-color: #ffffff; /* Той самий колір, що й .menu-bottom-half */
+    border-radius: 50%;
+}
+
 .menu-buttons {
   display: flex;
   flex-direction: column;
   gap: 15px;
+  position: relative; /* Щоб кнопки були НАД дугою */
+  z-index: 5;
+  margin-top: 30px; /* Додатковий відступ зверху */
 }
+
 #main-menu-screen #continue-btn {
   display: none; 
 }
+/* --- Кінець змін меню --- */
 
 /* --- Екран правил --- */
 #rules-screen h2 { 
-    margin-top: 0; 
+    margin-top: 50px; 
 }
 .rules-content {
   text-align: left;
