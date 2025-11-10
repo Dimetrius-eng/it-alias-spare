@@ -211,70 +211,21 @@ async function initializeApp() {
   
   pauseBtn.style.display = 'none'; 
   
-  // ВИПРАВЛЕННЯ БАГУ: Ініціалізуємо currentActiveScreen тут
-  currentActiveScreen = mainMenuScreen;
-  
-  showScreen(mainMenuScreen, true); // true = без анімації
+  showScreen(mainMenuScreen); 
   scoreboard.style.display = 'none';
 }
 
 // --- Функції гри ---
-
-// ЗМІНА ТУТ: Додаємо логіку анімації
-let currentActiveScreen; 
-let isAnimating = false; 
-
-function showScreen(screenToShow, instant = false) {
-  if (isAnimating) return;
+function showScreen(screenToShow) {
+  screens.forEach(screen => screen.classList.remove('active'));
+  screenToShow.classList.add('active');
   
-  // ВИПРАВЛЕННЯ БАГУ: Переконатися, що currentActiveScreen не null
-  if (!currentActiveScreen) {
-      currentActiveScreen = mainMenuScreen;
+  if (screenToShow === gameScreen) {
+    pauseBtn.style.display = 'block';
+  } else {
+    pauseBtn.style.display = 'none';
   }
-
-  // Миттєвий перехід (для initializeApp)
-  if (instant) {
-    currentActiveScreen.classList.remove('active');
-    screenToShow.classList.add('active');
-    currentActiveScreen = screenToShow;
-    return;
-  }
-
-  // --- Початок анімації ---
-  isAnimating = true;
-
-  // 1. Анімація "ЗГАСАННЯ" (для старого екрану)
-  currentActiveScreen.classList.add('animate__animated', 'animate__fadeOut');
-
-  // 2. Чекаємо, поки "згасання" закінчиться (400ms з CSS)
-  setTimeout(() => {
-    // 3. Ховаємо старий екран
-    currentActiveScreen.classList.remove('active');
-    currentActiveScreen.classList.remove('animate__animated', 'animate__fadeOut');
-    
-    // 4. Показуємо новий екран (щоб анімація 'fadeIn' спрацювала)
-    screenToShow.classList.add('active');
-    
-    // 5. Анімація "ПОЯВИ" (для нового екрану)
-    screenToShow.classList.add('animate__animated', 'animate__fadeIn');
-
-    // 6. Оновлюємо поточний екран
-    currentActiveScreen = screenToShow;
-    
-    // 7. Керуємо кнопкою паузи
-    if (screenToShow === gameScreen) {
-      pauseBtn.style.display = 'block';
-    } else {
-      pauseBtn.style.display = 'none';
-    }
-
-    // 8. Знімаємо "замок"
-    // (Animate.css автоматично видаляє класи, тому isAnimating = false - це все, що треба)
-    isAnimating = false;
-    
-  }, 400); // 400ms = 0.4s (взято з --animate-duration в CSS)
 }
-
 
 function getWordsForCategory(category) {
   if (category === 'mixed') {
@@ -292,7 +243,7 @@ function setupNewGame() {
   gameState.team1Score = 0;
   gameState.team2Score = 0;
   gameState.currentTeam = 1;
-  gameState.currentRound = 1; // Починаємо з 1 раунду
+  gameState.currentRound = 1; // ЗМІНА: Починаємо з раунду 1
   gameState.lastRoundScore = 0;
   gameState.isGameInProgress = true; 
   gameState.isRoundActive = false; 
@@ -326,6 +277,14 @@ function startRound(isContinuation = false) {
   timeLeft = gameState.roundTime;
   timerDisplay.textContent = timeLeft;
   
+  // ЗМІНА: Ми більше не збільшуємо раунд тут.
+  // if (!isContinuation) {
+  //   if (gameState.currentTeam === 1) {
+  //     gameState.currentRound++;
+  //   }
+  // }
+  
+  // Ми просто показуємо поточний раунд
   roundCounterDisplay.textContent = `${gameState.currentRound} / ${gameState.totalRounds}`;
   
   if (gameState.currentTeam === 1) {
@@ -424,6 +383,7 @@ function handleLastWordSkip() {
   finishRoundLogic(); 
 }
 
+// ЗМІНА ТУТ: Повністю нова логіка завершення раунду
 function finishRoundLogic() {
   playSound(sounds.timesUp); 
 
@@ -432,23 +392,31 @@ function finishRoundLogic() {
   gameState.lastRoundScore = roundScore; 
   updateScoreboard();
 
+  // Перевіряємо, чи це був хід Команди 2
   if (gameState.currentTeam === 2) {
+    // Це був хід Команди 2. Раунд *дійсно* завершено.
     if (gameState.currentRound >= gameState.totalRounds) {
+      // Це був ОСТАННІЙ раунд, гра завершена.
       gameState.isGameInProgress = false; 
       showWinner();
       clearGameState(); 
     } else {
+      // Це був не останній раунд. Збільшуємо лічильник
+      // і передаємо хід Команді 1
       gameState.currentRound++;
       gameState.currentTeam = 1;
       showRoundSummary(false); 
       saveGameState(); 
     }
   } else {
+    // Це був хід Команди 1. Раунд ще не завершено.
+    // Просто передаємо хід Команді 2.
     gameState.currentTeam = 2;
     showRoundSummary(false); 
     saveGameState(); 
   }
 }
+
 
 function showRoundSummary(isContinuation = false) {
   if (isContinuation) {
