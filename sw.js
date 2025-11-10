@@ -1,5 +1,5 @@
-// ВЕРСІЯ 40 - Відкат до v39 (Стабільна + Останнє слово)
-const CACHE_NAME = 'it-alias-v40-stable-last-word';
+// ВЕРСІЯ 40 - Новий UI головного меню
+const CACHE_NAME = 'it-alias-v40-new-main-menu';
 
 const urlsToCache = [
   './',
