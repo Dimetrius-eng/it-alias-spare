@@ -10,23 +10,13 @@
     <link rel="manifest" href="manifest.json">
 </head>
 <body>
-    <div class="game-container">
-        
-        <button id="pause-btn" class="btn-pause">||</button>
-
-        <div class="scoreboard" id="scoreboard">
-            <div id="team1-display" class="team-score">
-                <span id="team1-name">Команда 1</span>: <span id="team1-score">0</span>
-            </div>
-            <div id="team2-display" class="team-score">
-                <span id="team2-name">Команда 2</span>: <span id="team2-score">0</span>
-            </div>
-        </div>
+    
+    <div class="game-wrapper">
 
         <div id="main-menu-screen" class="screen active">
             
             <div class="menu-top-half">
-                <div class="logo-placeholder">IT</div>
+                <img src="icons/icon-192x192.png" alt="Логотип IT Alias" class="logo-img">
             </div>
             
             <div class="menu-bottom-half">
@@ -39,111 +29,120 @@
 
         </div>
 
-        <div id="rules-screen" class="screen">
-            <h2>Правила гри</h2>
-            <div class="rules-content">
-                <p><strong>Мета:</strong> Пояснити слова своїй команді, не використовуючи самі слова, спільнокореневі слова та переклад.</p>
-                <p><strong>Хід гри:</strong></p>
-                <ul>
-                    <li>Гравець бере телефон і пояснює слова.</li>
-                    <li>Команда вгадує.</li>
-                    <li>За кожне вгадане слово натисніть "Зараховано".</li>
-                    <li>Щоб пропустити складне слово, натисніть "Пропустити".</li>
-                </ul>
-                <p>Перемагає команда, яка першою набере необхідну кількість балів (або більше за всіх після фінального раунду).</p>
-            </div>
-            <button class="btn-primary" data-target="main-menu-screen">Назад</button>
-        </div>
-
-        <div id="settings-screen" class="screen">
-            <h2>Налаштуйте гру</h2>
-            <div class="settings">
-                <input type="text" id="team1-input" placeholder="Назва Команди 1" value="Команда 1" maxlength="9">
-                <input type="text" id="team2-input" placeholder="Назва Команди 2" value="Команда 2" maxlength="9">
-                
-                <div class="slider-container">
-                    <label for="time-slider">Час раунду: <output id="time-output">60</output> с</label>
-                    <input type="range" id="time-slider" min="10" max="120" step="10" value="60">
-                </div>
-                
-                <div class="slider-container">
-                    <label for="rounds-slider">Кількість раундів: <output id="rounds-output">3</output></label>
-                    <input type="range" id="rounds-slider" min="1" max="5" step="1" value="3">
-                </div>
-
-                <label for="category-select">Складність (словник):</label>
-                <select id="category-select">
-                    <option value="easy">Легкий (новачок)</option>
-                    <option value="medium">Середній (джуніор)</option>
-                    <option value="hard">Складний (сеньйор)</option>
-                    <option value="mixed" selected>Змішаний (всі слова)</option>
-                </select>
-
-                <label for="sound-toggle-btn">Налаштування звуку:</label>
-                <button id="sound-toggle-btn" class="btn-sound-settings">Звук: Увімк. 🔊</button>
-            </div>
-            <button id="start-btn" class="btn-primary">Почати гру</button>
-            <button class="btn-tertiary" data-target="main-menu-screen">Назад</button>
-        </div>
-
-        <div id="game-screen" class="screen">
+        <div class="game-container">
             
-            <div class="stats-bar">
-                <div class="stat">
-                    <span>Раунд:</span>
-                    <span id="round-counter">1 / 5</span>
+            <button id="pause-btn" class="btn-pause">||</button>
+
+            <div class="scoreboard" id="scoreboard">
+                <div id="team1-display" class="team-score">
+                    <span id="team1-name">Команда 1</span>: <span id="team1-score">0</span>
                 </div>
-                <div class="stat">
-                    <span>Час:</span>
-                    <span id="timer">60</span>
+                <div id="team2-display" class="team-score">
+                    <span id="team2-name">Команда 2</span>: <span id="team2-score">0</span>
                 </div>
             </div>
-            <div id="word-display">
-                Слово для пояснення
-            </div>
-            <div class="buttons">
-                <button id="skip-btn" class="btn-secondary">Пропустити</button>
-                <button id="correct-btn" class="btn-success">Зараховано</button>
-            </div>
-        </div>
-        
-        <div id="last-word-screen" class="screen">
-            <h2>Останнє слово!</h2>
-            <div id="last-word-display">
+
+            <div id="rules-screen" class="screen">
+                <h2>Правила гри</h2>
+                <div class="rules-content">
+                    <p><strong>Мета:</strong> Пояснити слова своїй команді, не використовуючи самі слова, спільнокореневі слова та переклад.</p>
+                    <p><strong>Хід гри:</strong></p>
+                    <ul>
+                        <li>Гравець бере телефон і пояснює слова.</li>
+                        <li>Команда вгадує.</li>
+                        <li>За кожне вгадане слово натисніть "Зараховано".</li>
+                        <li>Щоб пропустити складне слово, натисніть "Пропустити".</li>
+                    </ul>
+                    <p>Перемагає команда, яка першою набере необхідну кількість балів (або більше за всіх після фінального раунді).</p>
                 </div>
-            <p>Чи встигла команда його вгадати?</p>
-            <div class="buttons">
-                <button id="last-word-skip-btn" class="btn-secondary">❌ Не вгадано</button>
-                <button id="last-word-correct-btn" class="btn-success">✅ Зараховано</button>
+                <button class="btn-primary" data-target="main-menu-screen">Назад</button>
             </div>
-        </div>
 
-        <div id="turn-end-screen" class="screen">
-            <h2 id="turn-end-title">Час вийшов!</h2>
-            <p id="round-summary"></p>
-            <p class="next-turn-text">Наступний хід: <span id="next-team-name"></span></p>
-            <button id="next-turn-btn" class="btn-primary">Почати раунд</button>
-            <button id="reset-game-btn" class="btn-tertiary">Вийти в меню</button>
-        </div>
+            <div id="settings-screen" class="screen">
+                <h2>Налаштуйте гру</h2>
+                <div class="settings">
+                    <input type="text" id="team1-input" placeholder="Назва Команди 1" value="Команда 1" maxlength="9">
+                    <input type="text" id="team2-input" placeholder="Назва Команди 2" value="Команда 2" maxlength="9">
+                    
+                    <div class="slider-container">
+                        <label for="time-slider">Час раунду: <output id="time-output">60</output> с</label>
+                        <input type="range" id="time-slider" min="10" max="120" step="10" value="60">
+                    </div>
+                    
+                    <div class="slider-container">
+                        <label for="rounds-slider">Кількість раундів: <output id="rounds-output">3</output></label>
+                        <input type="range" id="rounds-slider" min="1" max="5" step="1" value="3">
+                    </div>
 
-        <div id="game-over-screen" class="screen">
-            <h2>Гру завершено!</h2>
-            <p id="winner-message">Перемогла Команда 1!</p>
-            <p id="final-score-summary">Фінальний рахунок: 10 - 5</p>
-            <button id="new-game-btn" class="btn-primary">Нова гра</button>
-        </div>
-        
-        <div id="pause-screen" class="screen">
-            <h2>Пауза</h2>
-            <div class="menu-buttons">
-                <button id="resume-btn" class="btn-primary">Продовжити</button>
-                <button id="quit-to-menu-btn" class="btn-tertiary">Вийти в меню</button>
+                    <label for="category-select">Складність (словник):</label>
+                    <select id="category-select">
+                        <option value="easy">Легкий (новачок)</option>
+                        <option value="medium">Середній (джуніор)</option>
+                        <option value="hard">Складний (сеньйор)</option>
+                        <option value="mixed" selected>Змішаний (всі слова)</option>
+                    </select>
+
+                    <label for="sound-toggle-btn">Налаштування звуку:</label>
+                    <button id="sound-toggle-btn" class="btn-sound-settings">Звук: Увімк. 🔊</button>
+                </div>
+                <button id="start-btn" class="btn-primary">Почати гру</button>
+                <button class="btn-tertiary" data-target="main-menu-screen">Назад</button>
             </div>
-        </div>
 
-    </div>
+            <div id="game-screen" class="screen">
+                <div class="stats-bar">
+                    <div class="stat">
+                        <span>Раунд:</span>
+                        <span id="round-counter">1 / 5</span>
+                    </div>
+                    <div class="stat">
+                        <span>Час:</span>
+                        <span id="timer">60</span>
+                    </div>
+                </div>
+                <div id="word-display">
+                    Слово для пояснення
+                </div>
+                <div class="buttons">
+                    <button id="skip-btn" class="btn-secondary">Пропустити</button>
+                    <button id="correct-btn" class="btn-success">Зараховано</button>
+                </div>
+            </div>
+            
+            <div id="last-word-screen" class="screen">
+                <h2>Останнє слово!</h2>
+                <div id="last-word-display"></div>
+                <p>Чи встигла команда його вгадати?</p>
+                <div class="buttons">
+                    <button id="last-word-skip-btn" class="btn-secondary">❌ Не вгадано</button>
+                    <button id="last-word-correct-btn" class="btn-success">✅ Зараховано</button>
+                </div>
+            </div>
 
-    <script src="script.js"></script>
+            <div id="turn-end-screen" class="screen">
+                <h2 id="turn-end-title">Час вийшов!</h2>
+                <p id="round-summary"></p>
+                <p class="next-turn-text">Наступний хід: <span id="next-team-name"></span></p>
+                <button id="next-turn-btn" class="btn-primary">Почати раунд</button>
+                <button id="reset-game-btn" class="btn-tertiary">Вийти в меню</button>
+            </div>
+
+            <div id="game-over-screen" class="screen">
+                <h2>Гру завершено!</h2>
+                <p id="winner-message">Перемогла Команда 1!</p>
+                <p id="final-score-summary">Фінальний рахунок: 10 - 5</p>
+                <button id="new-game-btn" class="btn-primary">Нова гра</button>
+            </div>
+            
+            <div id="pause-screen" class="screen">
+                <h2>Пауза</h2>
+                <div class="menu-buttons">
+                    <button id="resume-btn" class="btn-primary">Продовжити</button>
+                    <button id="quit-to-menu-btn" class="btn-tertiary">Вийти в меню</button>
+                </div>
+            </div>
+
+        </div> </div> <script src="script.js"></script>
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
