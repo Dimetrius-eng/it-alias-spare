@@ -32,6 +32,10 @@ const lastWordScreen = document.getElementById('last-word-screen');
 const turnEndScreen = document.getElementById('turn-end-screen');
 const gameOverScreen = document.getElementById('game-over-screen');
 const pauseScreen = document.getElementById('pause-screen'); 
+
+// ЗМІНА ТУТ: Новий селектор для білого контейнера
+const gameContainer = document.querySelector('.game-container');
+
 const scoreboard = document.getElementById('scoreboard');
 const team1NameDisplay = document.getElementById('team1-name');
 const team1ScoreDisplay = document.getElementById('team1-score');
@@ -47,7 +51,7 @@ const categorySelect = document.getElementById('category-select');
 const continueBtn = document.getElementById('continue-btn'); 
 const newGameMenuBtn = document.getElementById('new-game-menu-btn'); 
 const rulesBtn = document.getElementById('rules-btn');             
-const startBtn = document.getElementById('start-btn'); SS
+const startBtn = document.getElementById('start-btn'); 
 const skipBtn = document.getElementById('skip-btn');
 const correctBtn = document.getElementById('correct-btn');
 const nextTurnBtn = document.getElementById('next-turn-btn');
@@ -197,10 +201,9 @@ async function initializeApp() {
     console.log(`Завантажено ${Object.keys(allWordsByCategory).length} категорій слів.`);
   } catch (error) {
     console.error(error);
-    const h1 = mainMenuScreen.querySelector('h1');
+    const h1 = mainMenuScreen.querySelector('.logo-img'); // Змінено селектор
     if (h1) {
-      h1.textContent = "Помилка завантаження слів. Спробуйте оновити.";
-      h1.style.color = 'red';
+      h1.alt = "Помилка завантаження слів.";
     }
     return;
   }
@@ -216,16 +219,32 @@ async function initializeApp() {
 }
 
 // --- Функції гри ---
+
+// ЗМІНА ТУТ: Нова логіка showScreen для дизайну
 function showScreen(screenToShow) {
+  // 1. Ховаємо всі екрани
   screens.forEach(screen => screen.classList.remove('active'));
+  
+  // 2. Показуємо потрібний екран
   screenToShow.classList.add('active');
   
+  // 3. Керуємо кнопкою паузи
   if (screenToShow === gameScreen) {
     pauseBtn.style.display = 'block';
   } else {
     pauseBtn.style.display = 'none';
   }
+  
+  // 4. Керуємо контейнером
+  if (screenToShow === mainMenuScreen) {
+    // Якщо це головне меню, ховаємо білий контейнер
+    gameContainer.style.display = 'none';
+  } else {
+    // Для всіх інших екранів, показуємо білий контейнер
+    gameContainer.style.display = 'block';
+  }
 }
+
 
 function getWordsForCategory(category) {
   if (category === 'mixed') {
