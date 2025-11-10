@@ -6,21 +6,24 @@ body {
     color: #333;
     padding: 0;
     margin: 0;
-    /* (Видалено flex, justify-content, align-items, min-height) */
     /* ЗАБОРОНА ПРОКРУТКИ (СТАТИЧНА СТОРІНКА) */
     overflow: hidden;
     height: 100vh;
+    display: flex; /* Додано, щоб game-wrapper центрувався на весь екран */
+    justify-content: center;
+    align-items: center;
 }
 
 /* ОБГОРТКА ДЛЯ ВСІХ ЕКРАНІВ */
 .game-wrapper {
     width: 100%;
-    height: 100vh;
+    height: 100vh; /* Займає всю висоту */
     max-width: 450px; /* Обмежуємо ширину на ПК */
     margin: 0 auto; /* Центруємо */
     position: relative;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     overflow: hidden; /* Ховаємо прокрутку */
+    background-color: #ffffff; /* Дефолтний фон для game-wrapper */
 }
 
 
@@ -34,7 +37,6 @@ body {
     overflow-y: auto; /* Дозволяємо прокрутку, якщо екран замалий */
     position: relative; 
     box-sizing: border-box; 
-    /* (Видалено: max-width, border-radius, shadow, margin-top) */
 }
 
 h1 { color: #0056b3; margin-top: 0; margin-bottom: 10px; }
@@ -221,37 +223,39 @@ button:disabled {
 
 /* --- ЗМІНА ТУТ: Новий дизайн Головного меню --- */
 #main-menu-screen {
-    padding: 0; /* Прибираємо padding, щоб фон був на 100% */
+    padding: 0; 
     height: 100vh;
-    display: none; /* Замінюємо 'display: block' з .screen.active */
+    display: none; 
     flex-direction: column;
 }
 #main-menu-screen.active {
-    display: flex; /* Вмикаємо flex для .active */
+    display: flex; 
 }
 
 /* Верхня кольорова частина */
 .menu-top-half {
-    height: 60%; /* 60% висоти, як ви просили */
+    height: 60%; 
     /* IT-градієнт */
     background: linear-gradient(135deg, #0056b3, #007bff, #00aaff);
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
+    /* ВИДАЛЕНО: margin-top: -60px; (для правильного відображення градієнту) */
 }
 
+/* Логотип: чіткий та без обводки */
 .logo-img {
     width: 140px;
     height: 140px;
     border-radius: 50%;
-    border: 6px solid white;
+    /* ВИДАЛЕНО: border: 6px solid white; */
     box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 
 /* Нижня біла частина */
 .menu-bottom-half {
-    height: 40%; /* 40% висоти */
+    height: 40%; 
     background-color: #ffffff; 
     position: relative;
     padding: 28px; 
@@ -259,8 +263,8 @@ button:disabled {
     
     /* "УСМІШКА" (виріз догори) */
     margin-top: -60px; /* Тягнемо білий фон ВГОРУ, "під" кольоровий */
-    border-top-left-radius: 60% 40px; /* Магія "усмішки" */
-    border-top-right-radius: 60% 40px; /* Магія "усмішки" */
+    border-top-left-radius: 60% 80px; /* Магія "усмішки" (збільшив радіус для виразнішої дуги) */
+    border-top-right-radius: 60% 80px; /* Магія "усмішки" */
 }
 
 .menu-buttons {
@@ -269,7 +273,7 @@ button:disabled {
   gap: 15px;
   position: relative; 
   z-index: 5;
-  margin-top: 30px; /* Відступ від "усмішки" */
+  margin-top: 30px; 
 }
 
 #main-menu-screen #continue-btn {
