@@ -1,5 +1,5 @@
-// ВЕРСІЯ 39 - Виправлення багу лічильника раундів
-const CACHE_NAME = 'it-alias-v39-round-counter-fix';
+// ВЕРСІЯ 40 - Відкат до v39 (Стабільна + Останнє слово)
+const CACHE_NAME = 'it-alias-v40-stable-last-word';
 
 const urlsToCache = [
   './',
@@ -22,7 +22,7 @@ self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('Відкрито кеш v39');
+        console.log('Відкрито кеш v40');
         const localUrls = urlsToCache.filter(url => !url.startsWith('http'));
         const externalUrls = urlsToCache.filter(url => url.startsWith('http'));
         
@@ -32,7 +32,7 @@ self.addEventListener('install', event => {
             return Promise.all(externalRequests.map(req => cache.add(req)));
           });
       })
-      .catch(err => console.error('Помилка cache.addAll у v39:', err))
+      .catch(err => console.error('Помилка cache.addAll у v40:', err))
   );
 });
 
@@ -61,7 +61,7 @@ self.addEventListener('activate', event => {
       );
     })
     .then(() => {
-        console.log('Service Worker v39 активовано і перехоплює контроль!');
+        console.log('Service Worker v40 активовано і перехоплює контроль!');
         return self.clients.claim();
     })
   );
