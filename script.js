@@ -47,7 +47,7 @@ const categorySelect = document.getElementById('category-select');
 const continueBtn = document.getElementById('continue-btn'); 
 const newGameMenuBtn = document.getElementById('new-game-menu-btn'); 
 const rulesBtn = document.getElementById('rules-btn');             
-const startBtn = document.getElementById('start-btn'); 
+const startBtn = document.getElementById('start-btn'); SS
 const skipBtn = document.getElementById('skip-btn');
 const correctBtn = document.getElementById('correct-btn');
 const nextTurnBtn = document.getElementById('next-turn-btn');
@@ -243,7 +243,7 @@ function setupNewGame() {
   gameState.team1Score = 0;
   gameState.team2Score = 0;
   gameState.currentTeam = 1;
-  gameState.currentRound = 1; // ЗМІНА: Починаємо з раунду 1
+  gameState.currentRound = 1; // Починаємо з 1 раунду
   gameState.lastRoundScore = 0;
   gameState.isGameInProgress = true; 
   gameState.isRoundActive = false; 
@@ -277,14 +277,6 @@ function startRound(isContinuation = false) {
   timeLeft = gameState.roundTime;
   timerDisplay.textContent = timeLeft;
   
-  // ЗМІНА: Ми більше не збільшуємо раунд тут.
-  // if (!isContinuation) {
-  //   if (gameState.currentTeam === 1) {
-  //     gameState.currentRound++;
-  //   }
-  // }
-  
-  // Ми просто показуємо поточний раунд
   roundCounterDisplay.textContent = `${gameState.currentRound} / ${gameState.totalRounds}`;
   
   if (gameState.currentTeam === 1) {
@@ -383,7 +375,6 @@ function handleLastWordSkip() {
   finishRoundLogic(); 
 }
 
-// ЗМІНА ТУТ: Повністю нова логіка завершення раунду
 function finishRoundLogic() {
   playSound(sounds.timesUp); 
 
@@ -392,31 +383,23 @@ function finishRoundLogic() {
   gameState.lastRoundScore = roundScore; 
   updateScoreboard();
 
-  // Перевіряємо, чи це був хід Команди 2
   if (gameState.currentTeam === 2) {
-    // Це був хід Команди 2. Раунд *дійсно* завершено.
     if (gameState.currentRound >= gameState.totalRounds) {
-      // Це був ОСТАННІЙ раунд, гра завершена.
       gameState.isGameInProgress = false; 
       showWinner();
       clearGameState(); 
     } else {
-      // Це був не останній раунд. Збільшуємо лічильник
-      // і передаємо хід Команді 1
       gameState.currentRound++;
       gameState.currentTeam = 1;
       showRoundSummary(false); 
       saveGameState(); 
     }
   } else {
-    // Це був хід Команди 1. Раунд ще не завершено.
-    // Просто передаємо хід Команді 2.
     gameState.currentTeam = 2;
     showRoundSummary(false); 
     saveGameState(); 
   }
 }
-
 
 function showRoundSummary(isContinuation = false) {
   if (isContinuation) {
