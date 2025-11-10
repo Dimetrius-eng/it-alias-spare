@@ -1,5 +1,5 @@
-// ВЕРСІЯ 42 - Примусове оновлення (для "отруєного" кешу v41)
-const CACHE_NAME = 'it-alias-v43-final-animation-fix';
+// ВЕРСІЯ 39 - Виправлення багу лічильника раундів
+const CACHE_NAME = 'it-alias-v39-round-counter-fix';
 
 const urlsToCache = [
   './',
@@ -22,7 +22,7 @@ self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('Відкрито кеш v42');
+        console.log('Відкрито кеш v39');
         const localUrls = urlsToCache.filter(url => !url.startsWith('http'));
         const externalUrls = urlsToCache.filter(url => url.startsWith('http'));
         
@@ -32,7 +32,7 @@ self.addEventListener('install', event => {
             return Promise.all(externalRequests.map(req => cache.add(req)));
           });
       })
-      .catch(err => console.error('Помилка cache.addAll у v43:', err))
+      .catch(err => console.error('Помилка cache.addAll у v39:', err))
   );
 });
 
@@ -48,14 +48,12 @@ self.addEventListener('fetch', event => {
 
 // 3. Подія "activate"
 self.addEventListener('activate', event => {
-  const cacheWhitelist = [CACHE_NAME]; // Залишити ТІЛЬКИ v42
+  const cacheWhitelist = [CACHE_NAME]; 
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cacheName => {
-          // Якщо назва кешу НЕ v42...
           if (cacheWhitelist.indexOf(cacheName) === -1) {
-            // ...ВИДАЛИТИ ЙОГО (включно зі зламаним v41)
             console.log('Видалення старого кешу:', cacheName);
             return caches.delete(cacheName);
           }
@@ -63,7 +61,7 @@ self.addEventListener('activate', event => {
       );
     })
     .then(() => {
-        console.log('Service Worker v43 активовано і перехоплює контроль!');
+        console.log('Service Worker v39 активовано і перехоплює контроль!');
         return self.clients.claim();
     })
   );
