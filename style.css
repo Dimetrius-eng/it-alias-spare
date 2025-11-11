@@ -221,7 +221,7 @@ button:disabled {
   cursor: not-allowed;
 }
 
-/* --- ЗМІНА ТУТ: Новий дизайн Головного меню --- */
+/* --- ЗМІНА ТУТ: Оновлений дизайн Головного меню --- */
 #main-menu-screen {
     padding: 0; 
     height: 100vh;
@@ -235,13 +235,15 @@ button:disabled {
 /* Верхня кольорова частина */
 .menu-top-half {
     height: 60%; 
-    /* IT-градієнт */
     background: linear-gradient(135deg, #0056b3, #007bff, #00aaff);
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
-    /* ВИДАЛЕНО: margin-top: -60px; (для правильного відображення градієнту) */
+    
+    /* ЗАВДАННЯ 1: Додаємо відступ зверху, щоб логотип не потрапив під "чубчик" (notch) */
+    padding-top: env(safe-area-inset-top);
+    box-sizing: border-box; /* Включаємо padding у висоту */
 }
 
 /* Логотип: чіткий та без обводки */
@@ -253,19 +255,48 @@ button:disabled {
     box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 
-/* Нижня біла частина */
+/* Нижня біла/жовта частина */
 .menu-bottom-half {
     height: 40%; 
-    background-color: #ffffff; 
+    /* ВИДАЛЕНО: background-color: #ffffff; */
+    /* ВИДАЛЕНО: padding: 28px; */
     position: relative;
-    padding: 28px; 
     box-sizing: border-box;
     
-    /* "УСМІШКА" (виріз догори) */
-    margin-top: -60px; /* Тягнемо білий фон ВГОРУ, "під" кольоровий */
-    border-top-left-radius: 60% 80px; /* Магія "усмішки" (збільшив радіус для виразнішої дуги) */
-    border-top-right-radius: 60% 80px; /* Магія "усмішки" */
+    margin-top: -60px;
+    border-top-left-radius: 60% 80px;
+    border-top-right-radius: 60% 80px;
+
+    /* ЗАВДАННЯ 2: Ділимо на 2 частини (білу 75% і жовту 25%) */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Обрізаємо все, що виходить за межі "усмішки" */
 }
+
+/* НОВИЙ КЛАС: Біла область (75% висоти нижньої половини) */
+.menu-content-white {
+    height: 75%;
+    width: 100%;
+    background-color: #ffffff;
+    padding: 28px; /* Повертаємо оригінальний padding */
+    box-sizing: border-box;
+    position: relative; 
+    z-index: 5;
+    
+    /* Компенсуємо видалений margin-top у .menu-buttons */
+    padding-top: 58px; /* (28px оригінальний padding + 30px старий margin) */
+}
+
+/* НОВИЙ КЛАС: Жовта смуга (25% висоти нижньої половини) */
+.menu-bottom-yellow-stripe {
+    height: 25%;
+    width: 100%;
+    background-color: #ffc107; /* Колір з .btn-secondary */
+    
+    /* ЗАВДАННЯ 2: Додаємо відступ знизу, щоб смуга заповнила системну панель навігації */
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
 
 .menu-buttons {
   display: flex;
@@ -273,7 +304,7 @@ button:disabled {
   gap: 15px;
   position: relative; 
   z-index: 5;
-  margin-top: 30px; 
+  /* ВИДАЛЕНО: margin-top: 30px; (перенесено у padding .menu-content-white) */
 }
 
 #main-menu-screen #continue-btn {
