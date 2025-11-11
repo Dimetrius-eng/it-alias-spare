@@ -1,5 +1,5 @@
-// ВЕРСІЯ 41 - Виправлений дизайн головного меню
-const CACHE_NAME = 'it-alias-v41-fixed-menu-design';
+// ВЕРСІЯ 42 - Примусове оновлення PWA для повноекранного режиму
+const CACHE_NAME = 'it-alias-v42-fullscreen-pwa';
 
 const urlsToCache = [
   './',
@@ -9,7 +9,7 @@ const urlsToCache = [
   './manifest.json',
   './words.json',
   './icons/icon-192x192.png',
-  './icons/icon-512x512.png', // Оновлено для використання 512x512
+  './icons/icon-512x512.png', 
   'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap',
   './sounds/correct.mp3',
   './sounds/skip.mp3',
@@ -22,7 +22,7 @@ self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('Відкрито кеш v41');
+        console.log('Відкрито кеш v42');
         const localUrls = urlsToCache.filter(url => !url.startsWith('http'));
         const externalUrls = urlsToCache.filter(url => url.startsWith('http'));
         
@@ -32,7 +32,7 @@ self.addEventListener('install', event => {
             return Promise.all(externalRequests.map(req => cache.add(req)));
           });
       })
-      .catch(err => console.error('Помилка cache.addAll у v41:', err))
+      .catch(err => console.error('Помилка cache.addAll у v42:', err))
   );
 });
 
@@ -61,8 +61,9 @@ self.addEventListener('activate', event => {
       );
     })
     .then(() => {
-        console.log('Service Worker v41 активовано і перехоплює контроль!');
+        console.log('Service Worker v42 активовано і перехоплює контроль!');
         return self.clients.claim();
     })
   );
 });
+
