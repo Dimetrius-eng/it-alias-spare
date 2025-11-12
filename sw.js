@@ -1,5 +1,5 @@
-// ВЕРСІЯ 43 - Нова логіка фону (body.bg + padding)
-const CACHE_NAME = 'it-alias-v43-new-bg-logic';
+// ВЕРСІЯ 44 - Виправлення білого статус-бару (main-menu-screen: transparent)
+const CACHE_NAME = 'it-alias-v44-fix-white-statusbar';
 
 const urlsToCache = [
   './',
@@ -22,7 +22,7 @@ self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('Відкрито кеш v43');
+        console.log('Відкрито кеш v44');
         const localUrls = urlsToCache.filter(url => !url.startsWith('http'));
         const externalUrls = urlsToCache.filter(url => url.startsWith('http'));
         
@@ -32,7 +32,7 @@ self.addEventListener('install', event => {
             return Promise.all(externalRequests.map(req => cache.add(req)));
           });
       })
-      .catch(err => console.error('Помилка cache.addAll у v43:', err))
+      .catch(err => console.error('Помилка cache.addAll у v44:', err))
   );
 });
 
@@ -61,7 +61,7 @@ self.addEventListener('activate', event => {
       );
     })
     .then(() => {
-        console.log('Service Worker v43 активовано і перехоплює контроль!');
+        console.log('Service Worker v44 активовано і перехоплює контроль!');
         return self.clients.claim();
     })
   );
